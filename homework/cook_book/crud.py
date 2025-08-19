@@ -34,8 +34,8 @@ async def get_all_recipes(session: AsyncSession) -> list[Recipe]:
 
 
 async def get_recipe_by_id(
-        session: AsyncSession,
-        recipe_id: int,
+    session: AsyncSession,
+    recipe_id: int,
 ) -> Recipe | None:
     """
     Получение рецепта по его ID и увеличение счетчика просмотров.
@@ -45,7 +45,8 @@ async def get_recipe_by_id(
     """
     recipe: Recipe | None = await session.get(Recipe, recipe_id)
     if recipe:
-        recipe.views += 1
+        views: int = recipe.views
+        recipe.views = views + 1
         await session.commit()
         await session.refresh(recipe)
     return recipe

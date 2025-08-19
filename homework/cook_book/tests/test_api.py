@@ -1,24 +1,21 @@
-from typing import Any
-
 import pytest
-from database import Base
-from httpx import ASGITransport, AsyncClient, Response
-from main import app, get_session
-from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
+from httpx import ASGITransport, AsyncClient
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
+
+from ..main import app, get_session
+from ..models import Base
 
 
 @pytest.fixture
-async def test_session() -> AsyncSession:
+async def test_session():
     """Фикстура для создания тестовой базы данных в памяти."""
-    test_engine: AsyncEngine = create_async_engine(
+    test_engine = create_async_engine(
         "sqlite+aiosqlite:///:memory:",
         echo=False,
     )
-    async_session: sessionmaker = sessionmaker(
-        bind=test_engine,
-        class_=AsyncSession,
-        expire_on_commit=False,
+    async_session = sessionmaker(
+        bind=test_engine, class_=AsyncSession, expire_on_commit=False
     )
 
     async with test_engine.begin() as conn:
@@ -33,7 +30,7 @@ async def test_session() -> AsyncSession:
 
 
 @pytest.fixture
-async def client(test_session: AsyncSession) -> AsyncClient:
+async def client(test_session):
     """Фикстура для создания асинхронного тестового клиента."""
     app.dependency_overrides[get_session] = lambda: test_session
     async with AsyncClient(
@@ -43,17 +40,17 @@ async def client(test_session: AsyncSession) -> AsyncClient:
 
 
 @pytest.mark.asyncio
-async def test_create_recipe(client: AsyncClient) -> None:
+async def test_create_recipe(client):
     """Тестирует создание рецепта."""
-    recipe_data: dict[str, int | str] = {
+    recipe_data = {
         "title": "Тестовый рецепт",
         "cooking_time": 30,
         "ingredients": "Мука, вода, соль",
         "description": "Простое тесто для выпечки.",
     }
-    response: Response = await client.post("/recipes", json=recipe_data)
+    response = await client.post("/recipes", json=recipe_data)
     assert response.status_code == 200
-    data: Any = response.json()
+    data = response.json()
     assert data["title"] == recipe_data["title"]
     assert data["cooking_time"] == recipe_data["cooking_time"]
     assert data["views"] == 0
@@ -61,51 +58,51 @@ async def test_create_recipe(client: AsyncClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_get_all_recipes(client: AsyncClient) -> None:
+async def test_get_all_recipes(client):
     """Тестирует получение списка всех рецептов."""
-    recipe_data: dict[str, int | str] = {
+    recipe_data = {
         "title": "Тестовый рецепт",
         "cooking_time": 30,
         "ingredients": "Мука, вода, соль",
         "description": "Простое тесто для выпечки.",
     }
     await client.post("/recipes", json=recipe_data)
-    response: Response = await client.get("/recipes")
+    response = await client.get("/recipes")
     assert response.status_code == 200
-    data: Any = response.json()
+    data = response.json()
     assert len(data) == 1
     assert data[0]["title"] == recipe_data["title"]
 
 
 @pytest.mark.asyncio
-async def test_get_recipe_by_id(client: AsyncClient) -> None:
+async def test_get_recipe_by_id(client):
     """Тестирует получение рецепта по ID и увеличение счетчика просмотров."""
-    recipe_data: dict[str, int | str] = {
+    recipe_data = {
         "title": "Тестовый рецепт",
         "cooking_time": 30,
         "ingredients": "Мука, вода, соль",
         "description": "Простое тесто для выпечки.",
     }
-    response: Response = await client.post("/recipes", json=recipe_data)
-    recipe_id: Any = response.json()["id"]
+    response = await client.post("/recipes", json=recipe_data)
+    recipe_id = response.json()["id"]
 
-    response: Response = await client.get(f"/recipes/{recipe_id}")
+    response = await client.get(f"/recipes/{recipe_id}")
     assert response.status_code == 200
-    data: Any = response.json()
+    data = response.json()
     assert data["title"] == recipe_data["title"]
     assert data["ingredients"] == recipe_data["ingredients"]
     assert data["description"] == recipe_data["description"]
     assert data["views"] == 1
 
     # Проверяем увеличение счетчика просмотров
-    response: Response = await client.get(f"/recipes/{recipe_id}")
+    response = await client.get(f"/recipes/{recipe_id}")
     assert response.status_code == 200
     assert response.json()["views"] == 2
 
 
 @pytest.mark.asyncio
-async def test_get_recipe_not_found(client: AsyncClient) -> None:
+async def test_get_recipe_not_found(client):
     """Тестирует обработку несуществующего рецепта."""
-    response: Response = await client.get("/recipes/999")
+    response = await client.get("/recipes/999")
     assert response.status_code == 404
-    assert response.json()["detail"] == "Рецепт не найден."
+    assert response.json()["detail"] == "Рецепт не найден"

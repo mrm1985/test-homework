@@ -1,4 +1,4 @@
-from collections.abc import AsyncIterator
+from collections.abc import AsyncGenerator, AsyncIterator
 from contextlib import asynccontextmanager
 from typing import Any
 
@@ -6,13 +6,13 @@ import uvicorn
 from crud import create_recipe, get_all_recipes, get_recipe_by_id
 from database import async_session, engine
 from fastapi import Depends, FastAPI, HTTPException
-from models import Base
+from models import Base, Recipe
 from schemas import RecipeCreate, RecipeDetail, RecipeRead
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
 # Функция зависимости для получения сессии
-async def get_session() -> AsyncSession:
+async def get_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session() as session:
         yield session
 
@@ -39,8 +39,8 @@ app: FastAPI = FastAPI(
     summary="Создание нового рецепта",
 )
 async def create(
-        recipe: RecipeCreate,
-        session: AsyncSession = Depends(get_session),
+    recipe: RecipeCreate,
+    session: AsyncSession = Depends(get_session),
 ) -> RecipeRead:
     """Создание нового рецепта в БД."""
     return await create_recipe(session, recipe)
@@ -52,9 +52,12 @@ async def create(
     summary="Получение списка рецептов",
 )
 async def read_all(
-        session: AsyncSession = Depends(get_session),
-) -> list[RecipeRead]:
-    """Получение списка всех рецептов, отсортированных по просмотрам и времени приготовления."""
+    session: AsyncSession = Depends(get_session),
+) -> list[Recipe]:
+    """
+    Получение списка всех рецептов, отсортированных
+    по просмотрам и времени приготовления.
+    """
     return await get_all_recipes(session)
 
 
@@ -64,8 +67,8 @@ async def read_all(
     summary="Получение деталей рецепта",
 )
 async def read_one(
-        recipe_id: int,
-        session: AsyncSession = Depends(get_session),
+    recipe_id: int,
+    session: AsyncSession = Depends(get_session),
 ) -> RecipeDetail:
     """Получение детальной информации о рецепте по его ID."""
     recipe: Any | None = await get_recipe_by_id(session, recipe_id)
