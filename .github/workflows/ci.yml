@@ -20,13 +20,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r test-homework/homework/cook_book/requirements.txt flake8 isort black mypy
       - name: Run flake8
-        run: flake8 homework/
+        run: flake8 test-homework/homework/
       - name: Run isort
-        run: isort --check-only --diff --profile black homework/
+        run: isort --check-only --diff --profile black test-homework/homework/
       - name: Run black
-        run: black --check --diff homework/
+        run: black --check --diff test-homework/homework/
       - name: Run mypy
-        run: mypy homework/ --ignore-missing-imports
+        run: mypy test-homework/homework/ --ignore-missing-imports
 
   test:  # Тесты
     runs-on: ubuntu-latest
