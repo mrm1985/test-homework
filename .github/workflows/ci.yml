@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r test-homework/requirements.txt flake8 isort black mypy
+          pip install -r test-homework/homework/cook_book/requirements.txt flake8 isort black mypy
       - name: Run flake8
         run: flake8 homework/
       - name: Run isort
