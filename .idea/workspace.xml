@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6968615c-ea8e-4f31-bb87-42fa896cb1ad" name="Changes" comment="add new config">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/homework/cook_book/.gitlab-ci.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/homework/cook_book/.github/workflows/github_actions.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -110,7 +109,7 @@
       <workItem from="1755159272973" duration="9561000" />
       <workItem from="1755246076135" duration="4192000" />
       <workItem from="1755502622023" duration="19965000" />
-      <workItem from="1755592345349" duration="5751000" />
+      <workItem from="1755592345349" duration="6056000" />
     </task>
     <task id="LOCAL-00001" summary="add project">
       <option name="closed" value="true" />
@@ -176,11 +175,30 @@
       <option name="project" value="LOCAL" />
       <updated>1755606633266</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="add new config">
+      <option name="closed" value="true" />
+      <created>1755607309089</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1755607309089</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add project" />
