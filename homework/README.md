@@ -18,15 +18,18 @@ API построен на основе FastAPI и использует асин�
 - Виртуальное окружение
 
 ### Зависимости, указанные в requirements.txt:
-- fastapi==0.110.3
-- uvicorn[standard]==0.30.1
-- sqlalchemy==2.0.25
+- fastapi==0.115.0
+- uvicorn==0.30.6
+- sqlalchemy==2.0.35
 - aiosqlite==0.20.0
-- greenlet==3.0.3
-- pytest==8.3.2
+- pydantic==2.9.2
+- pytest==8.3.3
 - pytest-asyncio==0.23.8
-- httpx==0.27.0
-- python-multipart==0.0.12
+- httpx==0.27.2
+- flake8==7.1.1
+- isort==5.13.2
+- black==24.8.0
+- mypy==1.11.2
 
 ### Структура проекта:
 - cook_book/
