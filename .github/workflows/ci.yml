@@ -1,0 +1,48 @@
+name: CI
+
+on:  # Триггеры: на каждый push и PR в любую ветку
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  lint:  # Линтеры
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Debug directory structure
+        run: |
+          ls -R
+          pwd
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r homework/cook_book/requirements.txt flake8 isort black mypy
+      - name: Run flake8
+        run: flake8 homework/
+      - name: Run isort
+        run: isort --check-only --diff --profile black homework/
+      - name: Run black
+        run: black --check --diff homework/
+      - name: Run mypy
+        run: mypy homework/ --ignore-missing-imports
+
+  test:  # Тесты
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r homework/cook_book/requirements.txt pytest pytest-asyncio httpx sqlalchemy aiosqlite
+      - name: Run pytest
+        run: pytest -v homework/cook_book/tests/
